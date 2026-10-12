@@ -1,0 +1,572 @@
+{% extends 'base.html' %}
+
+{% block title %}CHRONO LUXE | Haute Horlogerie & Fine Timepieces{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Banner */
+    .hero-section {
+        background: radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.15) 0%, transparent 55%),
+                    linear-gradient(180deg, #090B10 0%, #000000 100%);
+        border: 1px solid var(--border-gold);
+        border-radius: var(--radius-lg);
+        padding: 56px 44px;
+        margin-bottom: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 35px rgba(212, 175, 55, 0.1);
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -60%;
+        right: -10%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .hero-content {
+        max-width: 640px;
+        z-index: 1;
+    }
+
+    .hero-subtitle {
+        color: var(--accent-gold-bright);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        font-size: 0.82rem;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .hero-title {
+        font-family: 'Cinzel', serif;
+        font-size: 2.8rem;
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 16px;
+        color: #fff;
+    }
+
+    .hero-title span {
+        background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+        color: var(--text-muted);
+        font-size: 1.02rem;
+        line-height: 1.65;
+        margin-bottom: 28px;
+    }
+
+    .hero-stats {
+        display: flex;
+        gap: 28px;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .hero-stat-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hero-stat-num {
+        font-family: 'Cinzel', serif;
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--accent-gold-bright);
+    }
+
+    .hero-stat-lbl {
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+
+    /* Filter & Controls Bar */
+    .filter-panel {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        margin-bottom: 36px;
+    }
+
+    .filter-row-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .section-title {
+        font-family: 'Cinzel', serif;
+        font-size: 1.6rem;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .category-pills {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .pill {
+        padding: 7px 16px;
+        border-radius: 24px;
+        background: #000;
+        border: 1px solid var(--border-subtle);
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        transition: all 0.25s ease;
+    }
+
+    .pill:hover, .pill.active {
+        background: rgba(212, 175, 55, 0.15);
+        border-color: var(--accent-gold);
+        color: var(--accent-gold-bright);
+        box-shadow: 0 0 14px var(--accent-gold-glow);
+    }
+
+    .filter-form-bar {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .select-control {
+        background: #000;
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 8px 14px;
+        color: #fff;
+        font-size: 0.85rem;
+        outline: none;
+        cursor: pointer;
+        transition: border 0.2s ease;
+    }
+
+    .select-control:focus {
+        border-color: var(--accent-gold);
+    }
+
+    .price-input-sm {
+        background: #000;
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 8px 14px;
+        color: #fff;
+        font-size: 0.85rem;
+        width: 100px;
+        outline: none;
+    }
+
+    /* Product Grid */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 30px;
+    }
+
+    .product-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--border-gold);
+        box-shadow: var(--shadow-card), 0 0 25px var(--accent-gold-glow);
+        background: var(--bg-card-hover);
+    }
+
+    .card-badge {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.85);
+        border: 1px solid var(--border-gold);
+        color: var(--accent-gold-bright);
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        backdrop-filter: blur(8px);
+    }
+
+    .card-wishlist-btn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        z-index: 3;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid var(--border-subtle);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+
+    .card-wishlist-btn:hover, .card-wishlist-btn.active {
+        color: #ef4444;
+        border-color: #ef4444;
+        background: rgba(239, 68, 68, 0.15);
+        transform: scale(1.1);
+    }
+
+    .image-box {
+        width: 100%;
+        height: 270px;
+        background: radial-gradient(circle at center, #141824 0%, #030406 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .image-box img {
+        max-width: 85%;
+        max-height: 85%;
+        object-fit: contain;
+        transition: transform 0.4s ease;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+    }
+
+    .product-card:hover .image-box img {
+        transform: scale(1.08) rotate(-1.5deg);
+    }
+
+    .product-info {
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .brand-tag {
+        color: var(--accent-gold);
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 6px;
+    }
+
+    .product-name {
+        font-size: 1.12rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+        line-height: 1.35;
+    }
+
+    .product-desc {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        line-height: 1.55;
+        margin-bottom: 18px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .card-footer-row {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .price-tag {
+        font-family: 'Cinzel', serif;
+        font-size: 1.45rem;
+        font-weight: 800;
+        color: var(--accent-gold-bright);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-icon-sm {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #000;
+        border: 1px solid var(--border-subtle);
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+
+    .btn-icon-sm:hover {
+        background: rgba(212, 175, 55, 0.2);
+        border-color: var(--accent-gold);
+        color: var(--accent-gold-bright);
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 70px 20px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        grid-column: 1 / -1;
+    }
+
+    .empty-state i {
+        font-size: 3.5rem;
+        color: var(--accent-gold);
+        margin-bottom: 16px;
+    }
+
+    @media (max-width: 800px) {
+        .hero-section { padding: 34px 24px; }
+        .hero-title { font-size: 2rem; }
+        .hero-stats { flex-wrap: wrap; gap: 18px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Banner -->
+<div class="hero-section">
+    <div class="hero-content">
+        <div class="hero-subtitle">
+            <i class="fa-solid fa-crown"></i> Haute Horlogerie Atelier
+        </div>
+        <h1 class="hero-title">Timeless <span>Mastery</span> & Pure Mechanical Precision</h1>
+        <p class="hero-desc">Discover genuine Swiss mechanical wonders, grand complications, and certified iconic timepieces hand-assembled by world-renowned horology houses.</p>
+        
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+            <a href="#catalog" class="btn-gold">
+                <i class="fa-solid fa-compass"></i> Explore Catalog
+            </a>
+            <a href="{% url 'admin_portal' %}" class="btn-outline-gold">
+                <i class="fa-solid fa-shield-halved"></i> Boutique Management
+            </a>
+        </div>
+
+        <div class="hero-stats">
+            <div class="hero-stat-item">
+                <span class="hero-stat-num">100%</span>
+                <span class="hero-stat-lbl">Swiss Certified</span>
+            </div>
+            <div class="hero-stat-item">
+                <span class="hero-stat-num">5-Year</span>
+                <span class="hero-stat-lbl">Global Warranty</span>
+            </div>
+            <div class="hero-stat-item">
+                <span class="hero-stat-num">Express</span>
+                <span class="hero-stat-lbl">Insured Courier</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Panel -->
+<div id="catalog" class="filter-panel">
+    <div class="filter-row-top">
+        <h2 class="section-title">
+            <i class="fa-solid fa-gem" style="color: var(--accent-gold); font-size: 1.2rem;"></i>
+            {% if query %}
+                Results for "{{ query }}"
+            {% elif selected_category %}
+                {{ selected_category }} Timepieces
+            {% elif selected_brand %}
+                {{ selected_brand }} Collection
+            {% else %}
+                Bespoke Timepiece Gallery
+            {% endif %}
+            <span style="font-size: 0.9rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans'; font-weight: 500;">
+                ({{ total_count }} watches)
+            </span>
+        </h2>
+
+        <!-- Category Pills -->
+        <div class="category-pills">
+            <a href="{% url 'home' %}" class="pill {% if not selected_category and not selected_brand and not query %}active{% endif %}">
+                All
+            </a>
+            {% for cat in categories %}
+                <a href="{% url 'home' %}?category={{ cat }}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="pill {% if selected_category == cat %}active{% endif %}">
+                    {{ cat }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Filter Form -->
+    <form action="{% url 'home' %}#catalog" method="GET" class="filter-form-bar">
+        {% if query %}
+            <input type="hidden" name="q" value="{{ query }}">
+        {% endif %}
+        {% if selected_category %}
+            <input type="hidden" name="category" value="{{ selected_category }}">
+        {% endif %}
+
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Brand:</label>
+            <select name="brand" class="select-control" onchange="this.form.submit()">
+                <option value="">All Brands</option>
+                {% for b in brands %}
+                    <option value="{{ b }}" {% if selected_brand == b %}selected{% endif %}>{{ b }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Sort By:</label>
+            <select name="sort" class="select-control" onchange="this.form.submit()">
+                <option value="featured" {% if selected_sort == 'featured' %}selected{% endif %}>Featured Timepieces</option>
+                <option value="price_asc" {% if selected_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if selected_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest Additions</option>
+                <option value="name" {% if selected_sort == 'name' %}selected{% endif %}>Alphabetical (A-Z)</option>
+            </select>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Price ($):</label>
+            <input type="number" name="min_price" value="{{ min_price }}" placeholder="Min" class="price-input-sm">
+            <span style="color: var(--text-muted);">-</span>
+            <input type="number" name="max_price" value="{{ max_price }}" placeholder="Max" class="price-input-sm">
+            <button type="submit" class="btn-icon-sm" title="Apply Price Filter">
+                <i class="fa-solid fa-filter"></i>
+            </button>
+        </div>
+
+        {% if selected_category or selected_brand or query or min_price or max_price %}
+            <a href="{% url 'home' %}#catalog" style="font-size: 0.8rem; color: #f87171; text-decoration: underline; margin-left: auto;">
+                <i class="fa-solid fa-rotate-left"></i> Reset All Filters
+            </a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Product Cards Grid -->
+<div class="products-grid">
+    {% for product in products %}
+        <div class="product-card">
+            <div class="card-badge">{{ product.category }}</div>
+
+            <!-- Wishlist Heart Toggle -->
+            <form action="{% url 'toggle_wishlist' product.id %}" method="POST" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="card-wishlist-btn {% if product.id in wishlist_ids %}active{% endif %}" title="Save to Wishlist">
+                    {% if product.id in wishlist_ids %}
+                        <i class="fa-solid fa-heart"></i>
+                    {% else %}
+                        <i class="fa-regular fa-heart"></i>
+                    {% endif %}
+                </button>
+            </form>
+            
+            <a href="{% url 'product_detail' product.id %}" class="image-box">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <i class="fa-solid fa-clock" style="font-size: 4.5rem; color: var(--text-muted);"></i>
+                {% endif %}
+            </a>
+
+            <div class="product-info">
+                <div class="brand-tag">{{ product.brand }}</div>
+                <a href="{% url 'product_detail' product.id %}" class="product-name">{{ product.name }}</a>
+                <p class="product-desc">{{ product.description }}</p>
+                
+                <div class="card-footer-row">
+                    <div>
+                        <div class="price-tag">${{ product.price }}</div>
+                        {% if not product.in_stock %}
+                            <span style="color: #f87171; font-size: 0.75rem; font-weight: 700;">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="{% url 'product_detail' product.id %}" class="btn-icon-sm" title="View Details">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+
+                        {% if product.in_stock %}
+                            <form action="{% url 'add_to_cart' product.id %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" class="btn-gold" style="padding: 9px 16px; font-size: 0.8rem;">
+                                    <i class="fa-solid fa-cart-plus"></i> Add
+                                </button>
+                            </form>
+                        {% else %}
+                            <button type="button" class="btn-outline-gold" style="padding: 8px 12px; font-size: 0.75rem; opacity: 0.6; cursor: not-allowed;" disabled>
+                                Sold
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="empty-state">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <h3 style="font-family: 'Cinzel', serif; font-size: 1.6rem; color: #fff; margin-bottom: 8px;">No Timepieces Found</h3>
+            <p style="color: var(--text-muted); margin-bottom: 24px;">No watches match your chosen filter criteria or search keyword.</p>
+            <a href="{% url 'home' %}" class="btn-gold">
+                <i class="fa-solid fa-rotate-left"></i> Reset Search & Filters
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

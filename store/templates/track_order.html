@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block title %}Track Horological Order | CHRONO LUXE{% endblock %}
+
+{% block extra_css %}
+<style>
+    .track-wrapper {
+        max-width: 860px;
+        margin: 20px auto 50px;
+    }
+
+    .track-header {
+        text-align: center;
+        margin-bottom: 36px;
+    }
+
+    .track-header h1 {
+        font-family: 'Cinzel', serif;
+        font-size: 2.3rem;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+
+    .search-panel {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: var(--shadow-card);
+    }
+
+    .search-form {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .track-input {
+        flex: 1;
+        background: #000;
+        border: 1px solid var(--border-gold);
+        border-radius: 30px;
+        padding: 14px 22px;
+        color: #fff;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    .track-input:focus {
+        box-shadow: 0 0 20px var(--accent-gold-glow);
+    }
+
+    /* Stepper Timeline */
+    .timeline-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-gold);
+        border-radius: var(--radius-lg);
+        padding: 40px;
+        box-shadow: 0 0 30px var(--accent-gold-glow);
+        margin-bottom: 30px;
+    }
+
+    .stepper {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin: 40px 0 50px;
+    }
+
+    .stepper::before {
+        content: '';
+        position: absolute;
+        top: 24px;
+        left: 30px;
+        right: 30px;
+        height: 3px;
+        background: var(--border-subtle);
+        z-index: 1;
+    }
+
+    .step-item {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 120px;
+        text-align: center;
+    }
+
+    .step-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #000;
+        border: 2px solid var(--border-subtle);
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        margin-bottom: 12px;
+    }
+
+    .step-item.active .step-circle {
+        border-color: var(--accent-gold);
+        background: var(--accent-gold);
+        color: #000;
+        box-shadow: 0 0 20px var(--accent-gold-glow);
+    }
+
+    .step-item.completed .step-circle {
+        border-color: #10b981;
+        background: #10b981;
+        color: #fff;
+    }
+
+    .step-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .step-item.active .step-title {
+        color: var(--accent-gold-bright);
+    }
+
+    .step-item.completed .step-title {
+        color: #34d399;
+    }
+
+    .order-details-box {
+        background: #050608;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        margin-top: 30px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border-subtle);
+        font-size: 0.92rem;
+        color: var(--text-muted);
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    @media (max-width: 700px) {
+        .search-form { flex-direction: column; }
+        .stepper { flex-direction: column; gap: 30px; align-items: flex-start; }
+        .stepper::before { display: none; }
+        .step-item { flex-direction: row; gap: 16px; width: 100%; text-align: left; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="track-wrapper">
+    <div class="track-header">
+        <h1><i class="fa-solid fa-truck-fast" style="color: var(--accent-gold);"></i> Insured Order Tracking</h1>
+        <p style="color: var(--text-muted);">Track the bespoke preparation, Swiss certification, and courier dispatch of your timepiece.</p>
+    </div>
+
+    <div class="search-panel">
+        <form action="{% url 'track_order' %}" method="GET" class="search-form">
+            <input type="text" name="q" value="{{ order_query }}" placeholder="Enter Order ID (e.g. 1) or Tracking Code (e.g. CLX-12345678)" class="track-input" required>
+            <button type="submit" class="btn-gold" style="padding: 14px 28px;">
+                <i class="fa-solid fa-magnifying-glass"></i> Track Order
+            </button>
+        </form>
+    </div>
+
+    {% if order %}
+        <div class="timeline-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px;">
+                <div>
+                    <h2 style="font-family: 'Cinzel', serif; font-size: 1.6rem; color: #fff;">Order #{{ order.id }}</h2>
+                    <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Placed on {{ order.created_at|date:"F d, Y • h:i A" }}</div>
+                </div>
+
+                <div style="text-align: right;">
+                    <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; display: block;">Tracking Reference</span>
+                    <span style="font-family: monospace; font-size: 1.1rem; color: var(--accent-gold-bright); font-weight: 700;">
+                        {{ order.tracking_number|default:"CLX-PROCESSING" }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Stepper Timeline -->
+            <div class="stepper">
+                <div class="step-item {% if step_index > 1 %}completed{% elif step_index == 1 %}active{% endif %}">
+                    <div class="step-circle">
+                        {% if step_index > 1 %}<i class="fa-solid fa-check"></i>{% else %}<i class="fa-solid fa-receipt"></i>{% endif %}
+                    </div>
+                    <span class="step-title">Order Confirmed</span>
+                </div>
+
+                <div class="step-item {% if step_index > 2 %}completed{% elif step_index == 2 %}active{% endif %}">
+                    <div class="step-circle">
+                        {% if step_index > 2 %}<i class="fa-solid fa-check"></i>{% else %}<i class="fa-solid fa-microscope"></i>{% endif %}
+                    </div>
+                    <span class="step-title">Horology Inspection</span>
+                </div>
+
+                <div class="step-item {% if step_index > 2 %}completed{% elif step_index == 2 %}active{% endif %}">
+                    <div class="step-circle">
+                        <i class="fa-solid fa-plane-departure"></i>
+                    </div>
+                    <span class="step-title">Express Dispatched</span>
+                </div>
+
+                <div class="step-item {% if step_index == 3 %}completed active{% endif %}">
+                    <div class="step-circle">
+                        <i class="fa-solid fa-house-chimney-check"></i>
+                    </div>
+                    <span class="step-title">Delivered</span>
+                </div>
+            </div>
+
+            <!-- Order Details -->
+            <div class="order-details-box">
+                <h4 style="font-family: 'Cinzel', serif; color: var(--accent-gold); font-size: 1.1rem; margin-bottom: 16px;">
+                    <i class="fa-solid fa-shield-halved"></i> Courier & Client Specification
+                </h4>
+
+                <div class="detail-row">
+                    <span>Client Name:</span>
+                    <strong style="color: #fff;">{{ order.full_name }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Contact Email:</span>
+                    <strong style="color: #fff;">{{ order.email }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Delivery Address:</span>
+                    <strong style="color: #fff;">{{ order.address }}, {{ order.city }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Current Status:</span>
+                    <span style="color: var(--accent-gold-bright); font-weight: 700;">{{ order.status }}</span>
+                </div>
+
+                <div class="detail-row">
+                    <span>Timepieces Enclosed:</span>
+                    <div>
+                        {% for item in order.items.all %}
+                            <div style="color: #fff; text-align: right;">{{ item.quantity }}x {{ item.product.brand }} - {{ item.product.name }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="detail-row" style="font-size: 1.1rem; font-weight: 700; padding-top: 14px; margin-top: 10px; border-top: 1px solid var(--border-gold);">
+                    <span style="color: #fff;">Total Value:</span>
+                    <span style="font-family: 'Cinzel', serif; color: var(--accent-gold-bright);">${{ order.total_price }}</span>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

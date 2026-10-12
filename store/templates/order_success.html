@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmed | CHRONO LUXE{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-container {
+        max-width: 750px;
+        margin: 40px auto;
+        background: var(--bg-card);
+        border: 1px solid var(--border-gold);
+        border-radius: var(--radius-lg);
+        padding: 50px 40px;
+        text-align: center;
+        box-shadow: 0 0 30px var(--accent-gold-glow);
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(16, 185, 129, 0.15);
+        border: 2px solid #10b981;
+        color: #34d399;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 24px;
+    }
+
+    .success-title {
+        font-family: 'Cinzel', serif;
+        font-size: 2.2rem;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+
+    .order-number {
+        color: var(--accent-gold-bright);
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        margin-bottom: 24px;
+    }
+
+    .receipt-box {
+        background: var(--bg-dark);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        text-align: left;
+        margin: 30px 0;
+    }
+
+    .receipt-header {
+        font-family: 'Cinzel', serif;
+        font-size: 1.1rem;
+        color: var(--accent-gold);
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-subtle);
+        margin-bottom: 16px;
+    }
+
+    .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .receipt-total {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 14px;
+        margin-top: 12px;
+        border-top: 1px solid var(--border-subtle);
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="success-container">
+    <div class="success-icon">
+        <i class="fa-solid fa-check"></i>
+    </div>
+
+    <h1 class="success-title">Order Confirmed!</h1>
+    <div class="order-number">
+        Order #{{ order.id }} &bull; <span style="color: var(--accent-gold); font-family: monospace;">{{ order.tracking_number|default:"CLX-PROCESSING" }}</span>
+    </div>
+
+    <p style="color: var(--text-muted); font-size: 1rem; max-width: 550px; margin: 0 auto 24px; line-height: 1.6;">
+        Thank you, <strong>{{ order.full_name }}</strong>. Your luxury timepiece order has been verified and registered for bespoke preparation and insured express courier delivery.
+    </p>
+
+    <div class="receipt-box">
+        <div class="receipt-header">
+            <i class="fa-solid fa-receipt"></i> Order Summary & Receipt
+        </div>
+
+        {% for item in order.items.all %}
+            <div class="receipt-row">
+                <span style="color: #fff;">{{ item.quantity }}x {{ item.product.name }}</span>
+                <span style="font-family: 'Cinzel', serif; color: var(--accent-gold);">${{ item.price }}</span>
+            </div>
+        {% endfor %}
+
+        <div class="receipt-row" style="margin-top: 10px;">
+            <span>Delivery Address:</span>
+            <span style="color: #fff;">{{ order.address }}, {{ order.city }}</span>
+        </div>
+
+        <div class="receipt-row">
+            <span>Tracking Reference:</span>
+            <span style="color: var(--accent-gold-bright); font-family: monospace; font-weight: 700;">{{ order.tracking_number }}</span>
+        </div>
+
+        <div class="receipt-total">
+            <span>Total Amount Paid</span>
+            <span style="font-family: 'Cinzel', serif; color: var(--accent-gold-bright);">${{ order.total_price }}</span>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+        <a href="{% url 'track_order' %}?q={{ order.id }}" class="btn-gold" style="padding: 14px 28px;">
+            <i class="fa-solid fa-truck-fast"></i> Track Order Live
+        </a>
+        <a href="{% url 'home' %}" class="btn-outline-gold" style="padding: 14px 28px;">
+            <i class="fa-solid fa-arrow-left"></i> Return to Catalog
+        </a>
+    </div>
+</div>
+
+{% endblock %}

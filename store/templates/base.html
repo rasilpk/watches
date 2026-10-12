@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CHRONO LUXE | Haute Horlogerie & Fine Timepieces{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-black: #000000;
+            --bg-dark: #050609;
+            --bg-card: #0A0C13;
+            --bg-card-hover: #121520;
+            --bg-glass: rgba(10, 12, 19, 0.75);
+            --accent-gold: #D4AF37;
+            --accent-gold-bright: #F5D061;
+            --accent-gold-glow: rgba(212, 175, 55, 0.25);
+            --accent-gold-dark: #997A1E;
+            --text-main: #FFFFFF;
+            --text-muted: #8E9BAE;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-gold: rgba(212, 175, 55, 0.35);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --shadow-card: 0 16px 36px rgba(0, 0, 0, 0.85);
+            --shadow-gold: 0 0 25px rgba(212, 175, 55, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            background-image: radial-gradient(circle at 50% 0%, #0d111a 0%, #000000 80%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        /* Top Announcement Bar */
+        .announcement-bar {
+            background: linear-gradient(90deg, #000000, #141103, #000000);
+            color: var(--accent-gold-bright);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 8px 16px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .announcement-bar a {
+            color: #fff;
+            text-decoration: underline;
+            font-weight: 700;
+        }
+
+        .announcement-bar a:hover {
+            color: var(--accent-gold);
+        }
+
+        /* Header Navbar */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .navbar {
+            max-width: 1340px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            gap: 20px;
+        }
+
+        .brand-logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.65rem;
+            font-weight: 800;
+            letter-spacing: 2.5px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .brand-logo i {
+            color: var(--accent-gold);
+            font-size: 1.45rem;
+            filter: drop-shadow(0 0 10px var(--accent-gold-glow));
+        }
+
+        .brand-logo span {
+            color: var(--accent-gold);
+            background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            list-style: none;
+        }
+
+        .nav-link {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            position: relative;
+            padding: 6px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-gold-bright);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-gold-bright), var(--accent-gold));
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        /* Search input bar */
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            background: #090B10;
+            border: 1px solid var(--border-subtle);
+            padding: 9px 16px 9px 38px;
+            border-radius: 30px;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            width: 200px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            width: 260px;
+            border-color: var(--accent-gold);
+            background: #0e1118;
+            box-shadow: 0 0 15px var(--accent-gold-glow);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Action buttons */
+        .icon-btn {
+            position: relative;
+            background: #090B10;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+        }
+
+        .icon-btn:hover {
+            color: var(--accent-gold-bright);
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .badge-count {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #000;
+        }
+
+        .cart-btn {
+            position: relative;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--border-gold);
+            color: var(--accent-gold-bright);
+            padding: 9px 18px;
+            border-radius: 30px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+        }
+
+        .cart-btn:hover {
+            background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+            color: #000;
+            box-shadow: var(--shadow-gold);
+            transform: translateY(-2px);
+        }
+
+        .admin-nav-btn {
+            background: linear-gradient(135deg, #181c26, #0c0e14);
+            border: 1px solid var(--border-gold);
+            color: var(--accent-gold-bright);
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            letter-spacing: 0.5px;
+            transition: all 0.25s ease;
+        }
+
+        .admin-nav-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 15px var(--accent-gold-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            max-width: 1340px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 34px 24px 70px;
+        }
+
+        /* Flash Messages */
+        .alert-messages {
+            margin-bottom: 24px;
+        }
+
+        .alert {
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid transparent;
+            animation: fadeIn 0.3s ease;
+            background: #090C12;
+        }
+
+        .alert-success {
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #34d399;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+        }
+
+        .alert-info {
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #60a5fa;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .alert-warning {
+            border-color: rgba(245, 158, 11, 0.4);
+            color: #fbbf24;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);
+        }
+
+        .alert-error {
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #f87171;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        .alert-close:hover { opacity: 1; }
+
+        /* General Buttons */
+        .btn-gold {
+            background: linear-gradient(135deg, var(--accent-gold-bright) 0%, var(--accent-gold) 100%);
+            color: #000;
+            font-weight: 800;
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .btn-gold:hover {
+            box-shadow: var(--shadow-gold);
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .btn-outline-gold {
+            background: transparent;
+            color: var(--accent-gold-bright);
+            border: 1px solid var(--border-gold);
+            padding: 11px 22px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.88rem;
+        }
+
+        .btn-outline-gold:hover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--accent-gold);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: #020305;
+            border-top: 1px solid var(--border-subtle);
+            padding: 60px 24px 34px;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            max-width: 1340px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-about p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-top: 14px;
+            max-width: 320px;
+        }
+
+        .footer-title {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-gold-bright);
+            padding-left: 4px;
+        }
+
+        .footer-bottom {
+            max-width: 1340px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 980px) {
+            .navbar { flex-wrap: wrap; }
+            .nav-links { order: 3; width: 100%; overflow-x: auto; padding-bottom: 6px; }
+            .search-input { width: 140px; }
+            .search-input:focus { width: 180px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <div class="announcement-bar">
+        <span><i class="fa-solid fa-crown" style="color: var(--accent-gold);"></i> CHRONO LUXE BESPOKE HOROLOGY ATELIER</span>
+        <span>•</span>
+        <span>Worldwide Insured Express Delivery Included</span>
+        <span>•</span>
+        <a href="{% url 'admin_portal' %}"><i class="fa-solid fa-gauge-high"></i> Boutique Admin Portal</a>
+    </div>
+
+    <header>
+        <nav class="navbar">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <i class="fa-solid fa-clock"></i>
+                CHRONO<span>LUXE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}" class="nav-link {% if not selected_category and not selected_brand %}active{% endif %}">Catalog</a></li>
+                <li><a href="{% url 'home' %}?category=Luxury" class="nav-link {% if selected_category == 'Luxury' %}active{% endif %}">Luxury</a></li>
+                <li><a href="{% url 'home' %}?category=Chronograph" class="nav-link {% if selected_category == 'Chronograph' %}active{% endif %}">Chronograph</a></li>
+                <li><a href="{% url 'home' %}?category=Sport" class="nav-link {% if selected_category == 'Sport' %}active{% endif %}">Sport</a></li>
+                <li><a href="{% url 'home' %}?category=Classic" class="nav-link {% if selected_category == 'Classic' %}active{% endif %}">Classic</a></li>
+                <li><a href="{% url 'track_order' %}" class="nav-link"><i class="fa-solid fa-location-crosshairs"></i> Track Order</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <form action="{% url 'home' %}" method="GET" class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" name="q" value="{{ query }}" placeholder="Search Rolex, Omega..." class="search-input">
+                    {% if selected_category %}
+                        <input type="hidden" name="category" value="{{ selected_category }}">
+                    {% endif %}
+                </form>
+
+                <!-- Wishlist Icon -->
+                <a href="{% url 'wishlist' %}" class="icon-btn" title="Saved Wishlist">
+                    <i class="fa-solid fa-heart"></i>
+                    {% if wishlist_count > 0 %}
+                        <span class="badge-count">{{ wishlist_count }}</span>
+                    {% endif %}
+                </a>
+
+                <!-- Cart Button -->
+                <a href="{% url 'cart_detail' %}" class="cart-btn">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span>Cart</span>
+                    {% if cart_item_count > 0 %}
+                        <span class="badge-count" style="position: static; margin-left: 4px;">{{ cart_item_count }}</span>
+                    {% endif %}
+                </a>
+
+                <!-- Custom Admin Portal Button -->
+                <a href="{% url 'admin_portal' %}" class="admin-nav-btn" title="Boutique Manager">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Admin</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% if messages %}
+            <div class="alert-messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <span><i class="fa-solid fa-circle-info"></i> {{ message }}</span>
+                        <button class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-about">
+                <div class="brand-logo" style="font-size: 1.4rem;">
+                    <i class="fa-solid fa-clock"></i> CHRONO<span>LUXE</span>
+                </div>
+                <p>Curating iconic timepieces of exceptional craftsmanship and timeless heritage for horology enthusiasts worldwide.</p>
+            </div>
+            <div>
+                <h4 class="footer-title">Collections</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'home' %}?category=Luxury">Luxury Editions</a></li>
+                    <li><a href="{% url 'home' %}?category=Chronograph">Chronographs</a></li>
+                    <li><a href="{% url 'home' %}?category=Sport">Sport & Diver</a></li>
+                    <li><a href="{% url 'home' %}?category=Classic">Classic Heritage</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">Concierge & Services</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'track_order' %}"><i class="fa-solid fa-truck-fast"></i> Track Your Order</a></li>
+                    <li><a href="{% url 'wishlist' %}"><i class="fa-solid fa-heart"></i> Saved Timepieces</a></li>
+                    <li><a href="{% url 'admin_portal' %}"><i class="fa-solid fa-sliders"></i> Boutique Admin Dashboard</a></li>
+                    <li><a href="#">Authenticity Certificate</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fa-brands fa-x-twitter"></i> X (Twitter)</a></li>
+                    <li><a href="#"><i class="fa-brands fa-youtube"></i> YouTube</a></li>
+                    <li><a href="#"><i class="fa-solid fa-envelope"></i> Concierge Atelier</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 CHRONO LUXE Haute Horlogerie. All rights reserved.</p>
+            <p><a href="{% url 'admin_portal' %}" style="color: var(--accent-gold);"><i class="fa-solid fa-lock"></i> Staff Admin Management</a></p>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}My Saved Timepieces | CHRONO LUXE{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .page-title {
+        font-family: 'Cinzel', serif;
+        font-size: 2.2rem;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .wishlist-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 28px;
+    }
+
+    .wishlist-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.35s ease;
+        position: relative;
+    }
+
+    .wishlist-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--border-gold);
+        box-shadow: 0 0 25px var(--accent-gold-glow);
+    }
+
+    .card-img-box {
+        height: 240px;
+        background: radial-gradient(circle at center, #131722 0%, #050608 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        position: relative;
+    }
+
+    .card-img-box img {
+        max-width: 85%;
+        max-height: 85%;
+        object-fit: contain;
+        transition: transform 0.4s ease;
+    }
+
+    .wishlist-card:hover .card-img-box img {
+        transform: scale(1.08);
+    }
+
+    .btn-remove-wishlist {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid var(--border-subtle);
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-remove-wishlist:hover {
+        background: #ef4444;
+        color: #fff;
+        transform: scale(1.1);
+    }
+
+    .card-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .card-brand {
+        color: var(--accent-gold);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .card-name {
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin: 6px 0 10px;
+    }
+
+    .card-price {
+        font-family: 'Cinzel', serif;
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--accent-gold-bright);
+        margin-bottom: 18px;
+    }
+
+    .card-actions {
+        margin-top: auto;
+        display: flex;
+        gap: 10px;
+    }
+
+    .empty-wishlist {
+        text-align: center;
+        padding: 80px 20px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+    }
+
+    .empty-wishlist i {
+        font-size: 4rem;
+        color: var(--accent-gold);
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">
+            <i class="fa-solid fa-heart" style="color: #ef4444;"></i> Saved Timepieces Wishlist
+        </h1>
+        <p style="color: var(--text-muted); margin-top: 6px;">Your curated collection of extraordinary haute horlogerie selections.</p>
+    </div>
+
+    <a href="{% url 'home' %}" class="btn-outline-gold">
+        <i class="fa-solid fa-arrow-left"></i> Browse Boutique
+    </a>
+</div>
+
+{% if products %}
+    <div class="wishlist-grid">
+        {% for product in products %}
+            <div class="wishlist-card">
+                <form action="{% url 'toggle_wishlist' product.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-remove-wishlist" title="Remove from Wishlist">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </form>
+
+                <a href="{% url 'product_detail' product.id %}" class="card-img-box">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <i class="fa-solid fa-clock" style="font-size: 4rem; color: var(--text-muted);"></i>
+                    {% endif %}
+                </a>
+
+                <div class="card-body">
+                    <span class="card-brand">{{ product.brand }}</span>
+                    <a href="{% url 'product_detail' product.id %}" class="card-name">{{ product.name }}</a>
+                    <div class="card-price">${{ product.price }}</div>
+
+                    <div class="card-actions">
+                        <a href="{% url 'product_detail' product.id %}" class="btn-outline-gold" style="flex: 1; padding: 10px; font-size: 0.82rem;">
+                            View Specs
+                        </a>
+                        
+                        <form action="{% url 'add_to_cart' product.id %}" method="POST" style="flex: 1;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-gold" style="width: 100%; padding: 10px; font-size: 0.82rem;">
+                                <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-wishlist">
+        <i class="fa-regular fa-heart"></i>
+        <h2 style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: #fff; margin-bottom: 10px;">Your Wishlist is Empty</h2>
+        <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 26px;">Click the heart icon on any luxury timepiece while exploring our atelier to save it for your private collection.</p>
+        <a href="{% url 'home' %}" class="btn-gold">
+            <i class="fa-solid fa-compass"></i> Discover Collection
+        </a>
+    </div>
+{% endif %}
+
+{% endblock %}
